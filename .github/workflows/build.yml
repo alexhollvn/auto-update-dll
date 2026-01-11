@@ -9,19 +9,19 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 6.0.x
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
 
-    - name: Publish
-      run: dotnet publish -c Release -r win-x64 --self-contained true
+    - name: Restore
+      run: nuget restore
+
+    - name: Build
+      run: msbuild /p:Configuration=Release
 
     - name: Upload EXE
       uses: actions/upload-artifact@v4
       with:
         name: AutoUpdateDll
-        path: bin/Release/net6.0/win-x64/publish/*.exe
+        path: bin/Release/*.exe
