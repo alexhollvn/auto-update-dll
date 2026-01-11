@@ -1,0 +1,27 @@
+name: Build EXE
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Publish
+      run: dotnet publish -c Release -r win-x64 --self-contained true
+
+    - name: Upload EXE
+      uses: actions/upload-artifact@v4
+      with:
+        name: AutoUpdateDll
+        path: bin/Release/net6.0/win-x64/publish/*.exe
